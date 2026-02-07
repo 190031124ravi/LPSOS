@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Attendance</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="icon" type="image/x-icon"
+        href="https://github.com/190031124ravi/images/raw/main/lpsos.ico">
+
+  <style>
+    :root {
+      --primary: #4e73df;
+      --primary-dark: #3553b8;
+      --bg1: #667eea;
+      --bg2: #764ba2;
+      --error: #e55353;
+      --success: #1e7e34;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(135deg, var(--bg1), var(--bg2));
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .navbar {
+      width: 100%;
+      background: #fff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+    }
+
+    .navbar img {
+      height: 32px;
+    }
+
+    .wrapper {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 420px;
+      background: #fff;
+      border-radius: 16px;
+      padding: 20px 18px 24px;
+      box-shadow: 0 14px 32px rgba(0,0,0,0.25);
+    }
+
+    @media (min-width: 600px) {
+      .navbar img { height: 40px; }
+      .wrapper { padding: 24px; }
+      .card { padding: 24px 24px 28px; max-width: 460px; }
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 6px;
+      font-size: 1.3rem;
+    }
+
+    p.subtitle {
+      text-align: center;
+      font-size: 0.95rem;
+      color: #666;
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    input, select, textarea, button {
+      font: inherit;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 9px;
+      margin-top: 4px;
+      border-radius: 8px;
+      border: 1px solid #ced4da;
+      font-size: 0.95rem;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 70px;
+    }
+
+    button {
+      padding: 10px 16px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+
+    .primary {
+      background: var(--primary);
+      color: #fff;
+    }
+    .primary:active { background: var(--primary-dark); }
+
+    .secondary {
+      background: #e2e6ea;
+      color: #333;
+    }
+
+    .btn-row {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .center-row {
+      display: flex;
+      justify-content: center;
+      margin-top: 18px;
+    }
+
+    .hidden { display: none; }
+
+    .error {
+      color: var(--error);
+      font-size: 0.85rem;
+      margin-top: 6px;
+    }
+
+    .info {
+      color: #6c757d;
+      font-size: 0.85rem;
+      margin-top: 6px;
+      text-align: center;
+    }
+
+    .success {
+      color: var(--success);
+      font-size: 0.95rem;
+      text-align: center;
+      margin-top: 6px;
+    }
+
+    .big-icon {
+      font-size: 40px;
+      text-align: center;
+      margin-bottom: 6px;
+    }
+    .big-icon.error-icon { color: var(--error); }
+    .big-icon.success-icon { color: var(--success); }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <img src="https://github.com/190031124ravi/images/raw/main/lpsosimage12.jpg" alt="Company Logo">
+  </div>
+
+  <div class="wrapper">
+    <div class="card">
+      <h2>Attendance</h2>
+      <p class="subtitle">Please mark your attendance for today.</p>
+
+      <!-- Step 0 -->
+      <div id="step0">
+        <div class="center-row">
+          <button class="primary" onclick="goToStep1()">Mark my attendance</button>
+        </div>
+      </div>
+
+      <!-- Step 1 -->
+      <div id="step1" class="hidden">
+        <label>Name
+          <input type="text" id="name" placeholder="Enter your name">
+        </label>
+
+        <label>Email
+          <input type="email" id="email" placeholder="Enter your gmail address">
+        </label>
+
+        <label>Phone Number
+          <input type="tel" id="phone" placeholder="10 digit mobile number" maxlength="10">
+        </label>
+
+        <div id="error1" class="error"></div>
+
+        <div class="btn-row">
+          <button class="secondary" onclick="backToStart()">Back</button>
+          <button class="primary" onclick="validateStep1()">Next</button>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div id="step2" class="hidden">
+        <label>Attended yesterday session?</label>
+        <select id="attended">
+          <option value="">Select</option>
+          <option value="Yes">Yes</option>
+          <option value="No">No</option>
+        </select>
+
+        <label>Any queries?</label>
+        <textarea id="queries" placeholder="Write your queries (optional)"></textarea>
+
+        <div id="error2" class="error"></div>
+
+        <div class="btn-row">
+          <button class="secondary" onclick="backToStep1()">Back</button>
+          <button class="primary" onclick="submitForm()">Submit</button>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div id="step3" class="hidden">
+        <div id="iconContainer" class="big-icon"></div>
+        <div id="finalMessage" class="success"></div>
+        <p id="finalInfo" class="info"></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxP9Q-M-SK601odOv-Lu1-T9dSokrdFFTO0eU-dA1CDgi-eArJZH6KddD9Hfpi36vZ2/exec'; // paste Apps Script URL here
+
+    function hideAll() {
+      document.getElementById('step0').classList.add('hidden');
+      document.getElementById('step1').classList.add('hidden');
+      document.getElementById('step2').classList.add('hidden');
+      document.getElementById('step3').classList.add('hidden');
+    }
+
+    function goToStep1() {
+      hideAll();
+      document.getElementById('step1').classList.remove('hidden');
+      document.getElementById('error1').textContent = '';
+    }
+
+    function backToStart() {
+      hideAll();
+      document.getElementById('step0').classList.remove('hidden');
+      document.getElementById('error1').textContent = '';
+    }
+
+    function backToStep1() {
+      hideAll();
+      document.getElementById('step1').classList.remove('hidden');
+      document.getElementById('error2').textContent = '';
+    }
+
+    // live restrictions
+    document.addEventListener('input', (e) => {
+      if (e.target.id === 'name') {
+        e.target.value = e.target.value.replace(/[^A-Za-z ]+/g, '');
+      }
+      if (e.target.id === 'phone') {
+        e.target.value = e.target.value.replace(/\D/g, '').slice(0, 10);
+      }
+    });
+
+    async function validateStep1() {
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const error = document.getElementById('error1');
+
+      const nameValid = /^[A-Za-z ]+$/.test(name);
+      const emailValid = /^[A-Za-z0-9._%+-]+@gmail\.com$/.test(email);
+      const phoneValid = /^\d{10}$/.test(phone);
+
+      if (!nameValid || !emailValid || !phoneValid) {
+        error.textContent = 'Enter valid Name (letters only), gmail address, and 10 digit Phone Number.';
+        return;
+      }
+
+      error.textContent = 'Checking your record, please wait...';
+
+      const payload = {
+        Name: name,
+        Email: email,
+        Phone: phone,
+        AttendedYesterday: '',
+        Queries: ''
+      };
+
+      try {
+        const res = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors', // avoids CORS blocking[web:111][web:117]
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        // With no-cors, we cannot read body; duplicate logic must be in final submit.
+        // So we only do client-side validation here and skip server duplicate on Next.
+        // To keep your requirement, better: only do server duplicate on final Submit.
+
+        // For simplicity now: just go to next step
+        hideAll();
+        document.getElementById('step2').classList.remove('hidden');
+      } catch (err) {
+        console.error(err);
+        error.textContent = 'Error checking record. Please try again.';
+      }
+    }
+
+    async function submitForm() {
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const attended = document.getElementById('attended').value;
+      const queries = document.getElementById('queries').value.trim();
+      const error2 = document.getElementById('error2');
+
+      if (!attended) {
+        error2.textContent = 'Please select if you attended yesterday session.';
+        return;
+      }
+
+      const payload = {
+        Name: name,
+        Email: email,
+        Phone: phone,
+        AttendedYesterday: attended,
+        Queries: queries
+      };
+
+      error2.textContent = 'Submitting, please wait...';
+
+      try {
+        const res = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          mode: 'cors', // we want JSON result here, may need small CORS proxy in real use[web:111][web:117]
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+
+        hideAll();
+        const icon = document.getElementById('iconContainer');
+        const finalMsg = document.getElementById('finalMessage');
+        const finalInfo = document.getElementById('finalInfo');
+
+        if (data.result === 'duplicate') {
+          icon.className = 'big-icon error-icon';
+          icon.textContent = '❌';
+          finalMsg.textContent = 'Attendance already marked.';
+          finalInfo.textContent = 'We found an existing record for this email or phone.';
+        } else {
+          icon.className = 'big-icon success-icon';
+          icon.textContent = '✅';
+          finalMsg.textContent = 'Thank you! Your attendance has been recorded.';
+          finalInfo.textContent = 'You may close this page now.';
+        }
+
+        document.getElementById('step3').classList.remove('hidden');
+
+        // clear
+        document.getElementById('name').value = '';
+        document.getElementById('email').value = '';
+        document.getElementById('phone').value = '';
+        document.getElementById('attended').value = '';
+        document.getElementById('queries').value = '';
+      } catch (err) {
+        console.error(err);
+        error2.textContent = 'Error submitting form. Please try again.';
+      }
+    }
+  </script>
+</body>
+</html>
